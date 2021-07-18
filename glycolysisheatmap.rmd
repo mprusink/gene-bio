@@ -1,0 +1,50 @@
+#Random Packages, Probably Don't Need All Of Them
+library(org.Hs.eg.db)
+library(annotate)
+library(biomaRt)
+library(dplyr)
+library(stringr)
+library(pheatmap)
+library(tidyr)
+library(reshape2)
+library(formatR)
+library(knitr)
+library(tidyverse)
+library(here) 
+library(rmarkdown)
+library(knitr)
+library(kableExtra)
+library(janitor)
+library(scales)
+library(ggpubr)
+library(edgeR)
+#Load The Gene List
+GlycolysisList <-read.delim(here::here("data", "GlycolysisGeneList.txt"), stringsAsFactors=F)
+#Load The Expression Data (Only a Limited List of the ~220 specific metabolism genes, can ask for full list later)
+ExpressionData <-read.delim(here::here("data", "geneExpressionComparison.txt"), stringsAsFactors=F)
+#Pull the glycolytic genes from the expression list
+GlycolysisExpression <-ExpressionData %>% filter(ExpressionData$RNA_name %in% GlycolysisList$Gene.Symbol)
+#If you want to pull all the EBV comparisons vs other gastric cancer subtypes
+EBVGlycolysisExpression <-GlycolysisExpression %>%  filter(GlycolysisExpression$Var1 =="EBV", .preserve = TRUE)
+#To pull which from that list are significant
+SigEBVGlycolysis<- EBVGlycolysisExpression %>% filter(EBVGlycolysisExpression$U_test_p <="0.05", .preserve = TRUE)
+#If we just want to pull out the significant genes in EBV vs Normal
+Norm_Versus_EBV_Glycolysis <- SigEBVGlycolysis %>% filter(SigEBVGlycolysis$Var2 =="Normal", .preserve=TRUE)
+#Gives Dimensions Of Table (No. of Rows and No. of Columns)
+dim(Norm_Versus_EBV_Glycolysis)
+#Filtering by Normal First
+#For the heatmap, I pulled the list of comparisons to Normal since we want to see all gastric cancer subtypes compared to each other
+NormGlycolysisExpression <-GlycolysisExpression %>%  filter(GlycolysisExpression$Var2 =="Normal", .preserve = TRUE)
+#Formatting the table to show only the columns we need to make the heatmap (gene name, subtype, fold-change vs normal)
+NormForHM <- NormGlycolysisExpression[c(1,3,9)]
+#Probably don't need this line
+Subtypes <- dcast(NormForHM$Var1, id.vars = c("EBV", "STAD_CIN", "STAD_GS", "STAD_MSI"))
+#Reformatting the table so that it is organized by gene name on the rows and subtype as columns so it can be read for heatmap
+WideData <- reshape(data=NormForHM,idvar="RNA_name",v.names = "log2FoldChange",timevar = "Var1",direction="wide")
+samp %>% remove_rownames %>% column_to_rownames(var="names")
+#Makes sure the row names are gene names, rather than the genes being considered data in the table
+WideData2 <- data.frame(WideData[,-1], row.names=WideData[,1])
+#Make the heatmap, only minimal graphical design, I need to play with this more
+WideHM <- pheatmap(WideData2)
+#Display heatmap
+WideHM
