@@ -37,8 +37,6 @@ dim(Norm_Versus_EBV_Glycolysis)
 NormGlycolysisExpression <-GlycolysisExpression %>%  filter(GlycolysisExpression$Var2 =="Normal", .preserve = TRUE)
 #Formatting the table to show only the columns we need to make the heatmap (gene name, subtype, fold-change vs normal)
 NormForHM <- NormGlycolysisExpression[c(1,3,9)]
-#Probably don't need this line
-Subtypes <- dcast(NormForHM$Var1, id.vars = c("EBV", "STAD_CIN", "STAD_GS", "STAD_MSI"))
 #Reformatting the table so that it is organized by gene name on the rows and subtype as columns so it can be read for heatmap
 WideData <- reshape(data=NormForHM,idvar="RNA_name",v.names = "log2FoldChange",timevar = "Var1",direction="wide")
 #Makes sure the row names are gene names, rather than the genes being considered data in the table
