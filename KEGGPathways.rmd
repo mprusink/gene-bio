@@ -1,0 +1,218 @@
+library(dplyr)
+library(here)
+library(biomaRt)
+library(KEGGREST)
+library(tidyr)
+#Load The KEGG Glycolysis/Gluconeogenesis List
+GlycoGluco<-keggGet("path:hsa00010")
+GlycoGlucoGenes<-GlycoGluco[[1]][["GENE"]]
+GlycoGlcuoGenesSplit<-strsplit(GlycoGlucoGenes, " ")
+GGList <- GlycoGlcuoGenesSplit[seq_along(GlycoGlcuoGenesSplit) %% 2 > 0]
+#Make a new table with only the glycolysis genes
+GeneListGlyco <- data.frame(GGList)
+GeneListGlycoLong<-t(GeneListGlyco)
+colnames(GeneListGlycoLong)<- c("GlycolysisGenes")
+GeneListConvert <- data.frame(GeneListGlycoLong)
+#Convert the EntrezGene IDs to Gene Names
+hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+ConvertedGlyco <- getBM(
+  attributes = c('hgnc_symbol','entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = GeneListConvert$GlycolysisGenes,
+  mart = hsmart
+)
+#Export File
+write.table(ConvertedGlyco, file="GlycolysisGluconeogenesisKEGGPathway10NEW.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
+
+#Load The KEGG TCA List
+TCA<-keggGet("path:hsa00020")
+TCA2<-TCA[[1]][["GENE"]]
+TCA3<-strsplit(TCA2, " ")
+TCA4 <- TCA3[seq_along(TCA3) %% 2 > 0]
+#Make a new table with only the glycolysis genes
+TCA5 <- data.frame(TCA4)
+TCA6<-t(TCA5)
+colnames(TCA6)<- c("GlycolysisGenes")
+TCAConvert <- data.frame(TCA6)
+#Convert the EntrezGene IDs to Gene Names
+hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+ConvertedTCA <- getBM(
+  attributes = c('hgnc_symbol','entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = TCAConvert$GlycolysisGenes,
+  mart = hsmart
+)
+#Export File
+write.table(ConvertedTCA, file="TCACycleKEGGPathway20NEW.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
+
+#Load The KEGG OXPHOS List
+OXP<-keggGet("path:hsa00190")
+OXP2<-OXP[[1]][["GENE"]]
+OXP3<-strsplit(OXP2, " ")
+OXP4 <- OXP3[seq_along(OXP3) %% 2 > 0]
+#Make a new table with only the glycolysis genes
+OXP5 <- data.frame(OXP4)
+OXP6<-t(OXP5)
+colnames(OXP6)<- c("Genes")
+OXPConvert <- data.frame(OXP6)
+#Convert the EntrezGene IDs to Gene Names
+hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+ConvertedOXP <- getBM(
+  attributes = c('hgnc_symbol','entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = OXPConvert$Genes,
+  mart = hsmart
+)
+#Export File
+write.table(ConvertedOXP, file="OXPCycleKEGGPathway190NEW.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
+
+#Load The KEGG FAS List
+FAS<-keggGet("path:hsa00061")
+FAS2<-FAS[[1]][["GENE"]]
+FAS3<-strsplit(FAS2, " ")
+FAS4 <- FAS3[seq_along(FAS3) %% 2 > 0]
+#Make a new table with only the glycolysis genes
+FAS5 <- data.frame(FAS4)
+FAS6<-t(FAS5)
+colnames(FAS6)<- c("Genes")
+FASConvert <- data.frame(FAS6)
+#Convert the EntrezGene IDs to Gene Names
+hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+ConvertedFAS <- getBM(
+  attributes = c('hgnc_symbol','entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = FASConvert$Genes,
+  mart = hsmart
+)
+#Export File
+write.table(ConvertedFAS, file="FASKEGGPathway61NEW.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
+
+#Load The KEGG FAD List
+FAD<-keggGet("path:hsa00071")
+FAD2<-FAD[[1]][["GENE"]]
+FAD3<-strsplit(FAD2, " ")
+FAD4 <- FAD3[seq_along(FAD3) %% 2 > 0]
+#Make a new table with only the FAD genes
+FAD5 <- data.frame(FAD4)
+FAD6<-t(FAD5)
+colnames(FAD6)<- c("Genes")
+FADConvert <- data.frame(FAD6)
+#Convert the EntrezGene IDs to Gene Names
+hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+ConvertedFAD <- getBM(
+  attributes = c('hgnc_symbol','entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = FADConvert$Genes,
+  mart = hsmart
+)
+#Export File
+write.table(ConvertedFAD, file="FADKEGGPathway71.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
+
+#Load The KEGG GLUT List
+GLUT<-keggGet("path:hsa00471")
+GLUT2<-GLUT[[1]][["GENE"]]
+GLUT3<-strsplit(GLUT2, " ")
+GLUT4 <- GLUT3[seq_along(GLUT3) %% 2 > 0]
+#Make a new table with only the FAD genes
+GLUT5 <- data.frame(GLUT4)
+GLUT6<-t(GLUT5)
+colnames(GLUT6)<- c("Genes")
+GLUTConvert <- data.frame(GLUT6)
+#Convert the EntrezGene IDs to Gene Names
+hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+ConvertedGLUT <- getBM(
+  attributes = c('hgnc_symbol','entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = GLUTConvert$Genes,
+  mart = hsmart
+)
+#Export File
+write.table(ConvertedGLUT, file="GLUTKEGGPathway471.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
+
+#Load The KEGG AAG List
+AAG<-keggGet("path:hsa00250")
+AAG2<-AAG[[1]][["GENE"]]
+AAG3<-strsplit(AAG2, " ")
+AAG4 <- AAG3[seq_along(AAG3) %% 2 > 0]
+#Make a new table with only the FAD genes
+AAG5 <- data.frame(AAG4)
+AAG6<-t(AAG5)
+colnames(AAG6)<- c("Genes")
+AAGConvert <- data.frame(AAG6)
+#Convert the EntrezGene IDs to Gene Names
+hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+ConvertedAAG <- getBM(
+  attributes = c('hgnc_symbol','entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = AAGConvert$Genes,
+  mart = hsmart
+)
+#Export File
+write.table(ConvertedAAG, file="AAGKEGGPathway250.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
+
+#Load The KEGG AAG List
+PPP<-keggGet("path:hsa00030")
+PPP2<-PPP[[1]][["GENE"]]
+PPP3<-strsplit(PPP2, " ")
+PPP4 <- PPP3[seq_along(PPP3) %% 2 > 0]
+#Make a new table with only the PPP genes
+PPP5 <- data.frame(PPP4)
+PPP6<-t(PPP5)
+colnames(PPP6)<- c("Genes")
+PPPConvert <- data.frame(PPP6)
+#Convert the EntrezGene IDs to Gene Names
+hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+ConvertedPPP <- getBM(
+  attributes = c('hgnc_symbol','entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = PPPConvert$Genes,
+  mart = hsmart
+)
+#Export File
+write.table(ConvertedPPP, file="PPPKEGGPathway250.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
+
+#Load The KEGG UNF List
+UNF<-keggGet("path:hsa01040")
+UNF2<-UNF[[1]][["GENE"]]
+UNF3<-strsplit(UNF2, " ")
+UNF4 <- UNF3[seq_along(UNF3) %% 2 > 0]
+#Make a new table with only the UNF genes
+UNF5 <- data.frame(UNF4)
+UNF6<-t(UNF5)
+colnames(UNF6)<- c("Genes")
+UNFConvert <- data.frame(UNF6)
+#Convert the EntrezGene IDs to Gene Names
+hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+ConvertedUNF <- getBM(
+  attributes = c('hgnc_symbol','entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = UNFConvert$Genes,
+  mart = hsmart
+)
+#Export File
+write.table(ConvertedUNF, file="UNFKEGGPathway1040.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
+
+#Load The KEGG FAE List
+FAE<-keggGet("path:hsa00062")
+FAE2<-FAE[[1]][["GENE"]]
+FAE3<-strsplit(FAE2, " ")
+FAE4 <- FAE3[seq_along(FAE3) %% 2 > 0]
+#Make a new table with only the FAE genes
+FAE5 <- data.frame(FAE4)
+FAE6<-t(FAE5)
+colnames(FAE6)<- c("Genes")
+FAEConvert <- data.frame(FAE6)
+#Convert the EntrezGene IDs to Gene Names
+hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+ConvertedFAE <- getBM(
+  attributes = c('hgnc_symbol','entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = UNFConvert$Genes,
+  mart = hsmart
+)
+#Export File
+write.table(ConvertedFAE, file="FAEKEGGPathway62.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
+
+FASMerge <- rbind(ConvertedFAS, ConvertedUNF, ConvertedFAE)
+FASMerge2 <-distinct(FASMerge,hgnc_symbol, .keep_all= TRUE)
+write.table(FASMerge2, file="FASKEGGPathway61-62-1040.txt", append = FALSE, sep = ",", dec = " ",row.names = FALSE, col.names = TRUE)
